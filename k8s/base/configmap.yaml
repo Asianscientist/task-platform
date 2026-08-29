@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: task-platform-config
+  namespace: task-platform
+data:
+  QUEUE_NAME: tasks
+  CORS_ORIGINS: http://localhost
+  ACCESS_TOKEN_EXPIRE_MINUTES: "60"
+  POSTGRES_DB: tasks
+  POSTGRES_USER: taskuser
+  REDIS_URL: redis://redis:6379/0
+  WORKER_METRICS_PORT: "8001"
