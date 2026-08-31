@@ -20,7 +20,11 @@ spec:
         ports:
         - name: nginx
           containerPort: 80
-        
+        volumeMounts:
+          - name: nginx-config
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+            readOnly: true
         livenessProbe:
           httpGet:
             path: /health
@@ -37,4 +41,8 @@ spec:
             requests: { cpu: 50m, memory: 64Mi }
             limits: { cpu: 300m, memory: 256Mi }
       
-      
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+          
