@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: task-platform
+
+resources:
+  - ../../base
+
+images:
+  - name: task-platform/backend
+    newName: task-platform/backend
+    newTag: "v1.0.0"
+  - name: task-platform/frontend
+    newName: task-platform/frontend
+    newTag: "v1.0.0"
