@@ -4,17 +4,17 @@ metadata:
   name: redis
   namespace: task-platform
   labels:
-    app: redis
 spec:
   replicas: 3
   selector:
     matchLabels:
       app: redis
+      role: db
   template:
     metadata:
       app.kubernetes.io/name: redis
       app.kubernetes.io/part-of: task-platform
-
+      role: db
     spec:
       containers:
         - name: redis
