@@ -7,6 +7,7 @@ spec:
   selector:
     matchLabels:
       app: postgres # has to match .spec.template.metadata.labels
+      role: db
   serviceName: postgres
   replicas: 3 # by default is 1
   minReadySeconds: 10 # by default is 0
@@ -14,6 +15,7 @@ spec:
     metadata:
       labels:
         app: postgres # has to match .spec.selector.matchLabels
+        role: db
     spec:
       terminationGracePeriodSeconds: 10
       containers:
