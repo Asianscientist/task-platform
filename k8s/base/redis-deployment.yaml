@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: redis
   namespace: task-platform
-  labels:
+  # labels:
 spec:
   replicas: 3
   selector:
@@ -12,15 +12,17 @@ spec:
       role: db
   template:
     metadata:
-      app.kubernetes.io/name: redis
-      app.kubernetes.io/part-of: task-platform
-      role: db
+      labels:
+        app: redis
+        app.kubernetes.io/name: redis
+        app.kubernetes.io/part-of: task-platform
+        role: db
     spec:
       containers:
         - name: redis
           image: redis:7-alpine
           ports:
-            name: redis
+          - name: redis
             containerPort: 6379
           livenessProbe:
             exec:
