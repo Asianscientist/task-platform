@@ -4,10 +4,12 @@ metadata:
   name: postgres
   namespace: task-platform
 spec:
-  ClusterIP: None
+  type: ClusterIP
+  clusterIP: None  
   selector:
-    app.kubernetes.io/name: postgres
+    app: postgres
+    role: db
   ports: 
-    name: postgres
-    port: 5432
-    targetPort: postgres
+    - name: postgres
+      port: 5432
+      targetPort: postgres
