@@ -6,7 +6,7 @@ metadata:
   labels:
     app: backend
 spec:
-  replicas: 3
+  replicas: {{ .Values.backend.replicas }}
   selector:
     matchLabels:
       app: backend
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: task-platform/backend:latest
+        image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
         ports:
         - name: http
           containerPort: 8000
@@ -47,7 +47,7 @@ spec:
           failureThreshold: 3
 
 
-      env:
+        env:
         - name: DATABASE_URL
           value: postgresql+psycopg://taskuser:$(POSTGRES_PASSWORD)@postgres:5432/tasks
         - name: REDIS_URL
