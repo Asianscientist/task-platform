@@ -1,5 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
 namespace: task-platform
 
 resources:
@@ -7,18 +8,64 @@ resources:
 
 images:
   - name: task-platform/backend
-    newName: task-platform/backend
-    newTag: dev
-  - name: task-platform/frontend
-    newName: task-platform/frontend
     newTag: dev
 
-replicas:
-  - name: backend
-    count: 1
-  - name: frontend
-    count: 1
-  - name: nginx
-    count: 1
-  - name: worker
-    count: 1
+  - name: task-platform/frontend
+    newTag: dev
+
+patches:
+  - target:
+      version: v1
+      kind: Deployment
+      name: backend
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+
+  - target:
+      version: v1
+      kind: Deployment
+      name: worker
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+
+  - target:
+      version: v1
+      kind: Deployment
+      name: frontend
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+
+  - target:
+      version: v1
+      kind: Deployment
+      name: nginx
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+
+  - target:
+      group: autoscaling
+      version: v2
+      kind: HorizontalPodAutoscaler
+      name: backend
+    patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 1
+
+  - target:
+      group: autoscaling
+      version: v2
+      kind: HorizontalPodAutoscaler
+      name: worker
+    patch: |-
+      - op: replace
+        path: /spec/minReplicas
+        value: 1
