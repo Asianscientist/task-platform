@@ -9,46 +9,76 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-      app.kubernetes.io/name: worker
+      app: worker
   template:
     metadata:
       labels:
+        app: worker
         app.kubernetes.io/name: worker
         app.kubernetes.io/part-of: task-platform
     spec:
       containers:
       - name: worker
-        image: task-platform/backend:latest
+        image: task-platform/backend:v1.0.0
         imagePullPolicy: IfNotPresent
         command: ["python", "-m", "worker.main"]
         ports:
         - containerPort: 8001
           name: metrics
+          protocol: TCP
         env:
-            - name: DATABASE_URL
-              value: postgresql+psycopg://taskuser:$(POSTGRES_PASSWORD)@postgres:5432/tasks
-            - name: REDIS_URL
-              valueFrom: { configMapKeyRef: { name: task-platform-config, key: REDIS_URL } }
-            - name: QUEUE_NAME
-              valueFrom: { configMapKeyRef: { name: task-platform-config, key: QUEUE_NAME } }
-            - name: WORKER_METRICS_PORT
-              valueFrom: { configMapKeyRef: { name: task-platform-config, key: WORKER_METRICS_PORT } }
-            - name: WORKER_ID
-              valueFrom: { fieldRef: { fieldPath: metadata.name } }
-            - name: POSTGRES_PASSWORD
-              valueFrom: { secretKeyRef: { name: task-platform-secret, key: POSTGRES_PASSWORD } }
-            - name: JWT_SECRET
-              valueFrom: { secretKeyRef: { name: task-platform-secret, key: JWT_SECRET } }
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: task-platform-secret
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            configMapKeyRef:
+              name: task-platform-config
+              key: REDIS_URL
+        - name: QUEUE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: task-platform-config
+              key: QUEUE_NAME
+        - name: WORKER_METRICS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: task-platform-config
+              key: WORKER_METRICS_PORT
+        - name: WORKER_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: task-platform-secret
+              key: POSTGRES_PASSWORD
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: task-platform-secret
+              key: JWT_SECRET
         readinessProbe:
           tcpSocket:
-            port: metrics
+            port: 8001
           initialDelaySeconds: 15
           periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
         livenessProbe:
           tcpSocket:
-            port: metrics
+            port: 8001
           initialDelaySeconds: 15
           periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
         resources:
-            requests: { cpu: 100m, memory: 128Mi }
-            limits: { cpu: 500m, memory: 512Mi }
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
