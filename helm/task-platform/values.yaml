@@ -9,6 +9,11 @@ backend:
   service:
     port: 8000
 
+monitoring:
+  enabled: true
+  labels:
+    release: monitoring
+
 frontend:
   replicas: 2
   image:
