@@ -9,6 +9,7 @@ from app.api.workers import router as workers_router
 from app.config import get_settings
 from app.database import init_db
 from app.middleware.metrics import metrics_middleware
+from prometheus_fastapi_instrumentator import Instrumentator
 
 settings = get_settings()
 
@@ -17,6 +18,7 @@ app = FastAPI(
     version="1.0.0",
     description="Small real-time task/job processing platform.",
 )
+Instrumentator().instrument(app).expose(app)
 
 app.add_middleware(
     CORSMiddleware,
