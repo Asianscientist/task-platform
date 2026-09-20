@@ -31,21 +31,12 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-backend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-backend:${{ github.sha }}
 
-      - name: Build backend
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./backend/Dockerfile
-          push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-worker:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-worker:${{ github.sha }}
-
+    
       - name: Build and push frontend
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ./frontend/Dockerfile
+          context: ./frontend
+          # file: ./frontend/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-frontend:latest
