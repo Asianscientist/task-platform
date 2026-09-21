@@ -2,8 +2,8 @@ name: Build and Push Docker Images
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*.*.*'
 
 jobs:
   build-and-push:
@@ -12,6 +12,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-backend
+          tags: |
+            type=semver,pattern={{version}}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -29,16 +37,13 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-backend:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-backend:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-backend:${{ steps.meta.outputs.version }}
 
-    
       - name: Build and push frontend
         uses: docker/build-push-action@v6
         with:
           context: ./frontend
-          # file: ./frontend/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-frontend:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-frontend:${{ github.sha }}
-
+            ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-frontend:${{ steps.meta.outputs.version }}
