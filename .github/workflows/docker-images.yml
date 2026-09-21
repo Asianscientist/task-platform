@@ -35,6 +35,7 @@ jobs:
         with:
           context: ./backend
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-backend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-backend:${{ steps.meta.outputs.version }}
@@ -44,6 +45,7 @@ jobs:
         with:
           context: ./frontend
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-frontend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/task-platform-frontend:${{ steps.meta.outputs.version }}
