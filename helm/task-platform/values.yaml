@@ -3,8 +3,8 @@ namespace: task-platform
 backend:
   replicas: 2
   image:
-    repository: task-platform/backend
-    tag: v1.0.0
+    repository: 18c336445927/task-platform-backend
+    tag: v1.0.1
     pullPolicy: IfNotPresent
   service:
     port: 8000
@@ -17,8 +17,8 @@ monitoring:
 frontend:
   replicas: 2
   image:
-    repository: task-platform/frontend
-    tag: v1.0.0
+    repository: 18c336445927/task-platform-frontend #task-platform/frontend
+    tag: v1.0.1
     pullPolicy: IfNotPresent
   service:
     port: 5173
@@ -26,8 +26,8 @@ frontend:
 worker:
   replicas: 3
   image:
-    repository: task-platform/backend
-    tag: v1.0.0
+    repository: 18c336445927/task-platform-backend
+    tag: v1.0.1
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
